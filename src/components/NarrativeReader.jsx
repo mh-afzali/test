@@ -4,13 +4,16 @@ import { getVisibleSections } from '../engine/narrative';
 
 export default function NarrativeReader({
   narrative, state, worldData, onBack, onSectionRead, onNavigatePoi, onOpenCharacter, onOpenEvent,
+  preview = false,
 }) {
   const visibleSections = getVisibleSections(narrative, state.time);
   const hasFutureSections = narrative.sections.length > visibleSections.length;
 
   return (
     <div className="narrative-reader">
-      <button className="back-btn" onClick={onBack}>← بازگشت</button>
+      {!preview && (
+        <button className="back-btn" onClick={onBack}>← بازگشت</button>
+      )}
 
       <header className="narrative-header">
         <h2>{narrative.title}</h2>
@@ -29,6 +32,7 @@ export default function NarrativeReader({
             onNavigatePoi={onNavigatePoi}
             onOpenCharacter={onOpenCharacter}
             onOpenEvent={onOpenEvent}
+            preview={preview}
           />
         ))}
 
@@ -42,11 +46,12 @@ export default function NarrativeReader({
   );
 }
 
-function SectionView({ section, index, narrativeId, worldData, onSectionRead, onNavigatePoi, onOpenCharacter, onOpenEvent }) {
+function SectionView({ section, index, narrativeId, worldData, onSectionRead, onNavigatePoi, onOpenCharacter, onOpenEvent, preview }) {
   const ref = useRef(null);
   const timerRef = useRef(null);
 
   useEffect(() => {
+    if (preview) return;
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -68,7 +73,7 @@ function SectionView({ section, index, narrativeId, worldData, onSectionRead, on
       observer.disconnect();
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [narrativeId, section.id, onSectionRead]);
+  }, [preview, narrativeId, section.id, onSectionRead]);
 
   return (
     <section

@@ -1,22 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import worldRaw from '../data/world.json';
 import charactersRaw from '../data/characters.json';
 import eventsRaw from '../data/events.json';
-import { saveDataFile, validateWorld } from './api';
+import { saveDataFile, deepClone, locateNarrative, updateNarrative, validateWorld } from './api';
+import TreeSidebar from './TreeSidebar';
+import NarrativeEditor from './NarrativeEditor';
+import LivePreview from './LivePreview';
+import './studio.css';
 
 export default function StudioApp() {
-  const [status, setStatus] = useState('');
   const [world, setWorld] = useState(null);
   const [characters, setCharacters] = useState(null);
   const [events, setEvents] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [previewTime, setPreviewTime] = useState(0);
+  const [status, setStatus] = useState('');
   const [errors, setErrors] = useState([]);
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
-    setWorld(worldRaw);
-    setCharacters(charactersRaw);
-    setEvents(eventsRaw);
+    setWorld(deepClone(worldRaw));
+    setCharacters(deepClone(charactersRaw));
+    setEvents(deepClone(eventsRaw));
     setErrors(validateWorld(worldRaw));
   }, []);
+
+  const selectedNarrative = useMemo(() => {
+    if (!world || !selected?.narrativeId) return null;
+    const loc = locateNarrative(world, selected.narrativeId);
+    return loc?.narrative || null;
+  }, [world, selected]);
 
   const handleSave = async () => {
     setStatus('در حال ذخیره...');
@@ -25,43 +38,76 @@ export default function StudioApp() {
       await saveDataFile('characters.json', characters);
       await saveDataFile('events.json', events);
       setStatus('✅ ذخیره شد روی دیسک');
+      setDirty(false);
     } catch (e) {
       setStatus(`❌ ${e.message}`);
     }
   };
 
-  return (
-    <div style={{ display: 'flex', height: '100%' }}>
-      <aside style={{ width: 240, borderInlineEnd: '1px solid #ddd', padding: 16, background: '#fafafa' }}>
-        <h2 style={{ marginTop: 0 }}>🎨 استودیو اطلس</h2>
-        <p style={{ fontSize: 12, color: '#666' }}>گام ۱: زیرساخت + تست ذخیره</p>
-        <button onClick={handleSave} style={{ width: '100%', padding: '8px 12px', cursor: 'pointer' }}>
-          💾 ذخیره همه
-        </button>
-        <div style={{ marginTop: 12, fontSize: 13 }}>{status}</div>
-        {errors.length > 0 && (
-          <div style={{ marginTop: 16, color: 'crimson', fontSize: 12 }}>
-            <strong>خطاها:</strong>
-            <ul>{errors.map((e, i) => <li key={i}>{e}</li>)}</ul>
-          </div>
-        )}
-      </aside>
+  const handleNarrativeChange = (newNarrative) => {
+    setWorld((w) => updateNarrative(w, selected.narrativeId, () => newNarrative));
+    setDirty(true);
+    const errs = validateWorld(world);
+    setErrors(errs);
+  };
 
-      <main style={{ flex: 1, padding: 24, overflow: 'auto' }}>
-        <h3>وضعیت داده‌ها</h3>
-        {world && (
-          <ul>
-            <li>قاره‌ها: {world.continents?.length}</li>
-            <li>کل POIها: {world.continents?.reduce((s, c) => s + (c.pois?.length || 0), 0)}</li>
-            <li>کل روایت‌ها: {world.continents?.reduce((s, c) => s + (c.pois?.reduce((a, p) => a + (p.narratives?.length || 0), 0)), 0)}</li>
-            <li>شخصیت‌ها: {characters?.length}</li>
-            <li>رویدادها: {events?.length}</li>
-          </ul>
-        )}
-        <p style={{ fontSize: 12, color: '#888' }}>
-          این فقط اسکلت است. در گام‌های بعدی ویرایشگر درختی، ویرایشگر روایت/بخش/بلاک، اعتبارسنجی و شبیه‌ساز تایم‌لاین اضافه می‌شود.
-        </p>
-      </main>
+  if (!world) return <div style={{ padding: 24 }}>در حال بارگذاری...</div>;
+
+  return (
+    <div className="studio-root">
+      <header className="studio-header">
+        <h1>🎨 استودیو اطلس</h1>
+        <div className="studio-header-actions">
+          {dirty && <span className="dirty-badge">● تغییرات ذخیره‌نشده</span>}
+          <button onClick={handleSave} className="save-btn">💾 ذخیره همه</button>
+          {status && <span className="status">{status}</span>}
+        </div>
+      </header>
+
+      <div className="studio-body">
+        <aside className="studio-sidebar">
+          <TreeSidebar world={world} selected={selected} onSelect={setSelected} />
+        </aside>
+
+        <main className="studio-main">
+          <NarrativeEditor
+            narrative={selectedNarrative}
+            onChange={handleNarrativeChange}
+          />
+          {errors.length > 0 && (
+            <div className="validation-box">
+              <strong>⚠️ خطاهای ساختاری:</strong>
+              <ul>{errors.map((e, i) => <li key={i}>{e}</li>)}</ul>
+            </div>
+          )}
+        </main>
+
+        <aside className="studio-preview">
+          <div className="preview-time-control">
+            <label>زمان پیش‌نمایش:</label>
+            <input
+              type="range"
+              min={0}
+              max={500}
+              value={previewTime}
+              onChange={(e) => setPreviewTime(Number(e.target.value))}
+            />
+            <input
+              type="number"
+              value={previewTime}
+              onChange={(e) => setPreviewTime(Number(e.target.value))}
+              style={{ width: 70 }}
+            />
+          </div>
+          <LivePreview
+            narrative={selectedNarrative}
+            world={world}
+            characters={characters}
+            events={events}
+            previewTime={previewTime}
+          />
+        </aside>
+      </div>
     </div>
   );
 }
