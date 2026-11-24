@@ -15,6 +15,7 @@ import { createInitialState, saveState, loadState } from './engine/gameState';
 import { advanceTime, reevaluateAllNarratives } from './engine/timeEngine';
 import { markSectionReadAndReevaluate } from './engine/narrative';
 import { findNarrativeById, findPoiById } from './engine/conditions';
+import AudioPlayer from './components/AudioPlayer';
 
 const worldData = {
   ...worldDataRaw,
@@ -166,6 +167,7 @@ export default function App() {
   return (
     <div className="app">
       <SettingsMenu onReset={handleReset} />
+      <AudioPlayer />
       <PageTransition viewKey={viewKey}>{content}</PageTransition>
       <TimeControl
         state={state}

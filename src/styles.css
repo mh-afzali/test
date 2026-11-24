@@ -810,6 +810,110 @@ body {
   font-family: 'Vazirmatn', serif;
 }
 
+/* ===== Audio Player ===== */
+.audio-player {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #241c14;
+  border: 1px solid #3a2e20;
+  border-radius: 20px;
+  padding: 6px 10px 6px 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.2s, background 0.2s;
+}
+.audio-player:hover {
+  border-color: #c8732a;
+  background: #2e2418;
+}
+
+.audio-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  color: #e8a85c;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+.audio-toggle:hover {
+  border-color: #c8732a;
+  background: #2e2418;
+  transform: scale(1.08);
+}
+.audio-toggle.playing {
+  background: #c8732a;
+  border-color: #c8732a;
+  color: #f4ecd8;
+  animation: audioPulse 2.4s ease-in-out infinite;
+}
+@keyframes audioPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 115, 42, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(200, 115, 42, 0); }
+}
+
+.audio-volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+.audio-player:hover .audio-volume-wrap {
+  max-width: 140px;
+  opacity: 1;
+}
+
+.audio-volume-icon {
+  font-size: 0.85rem;
+  color: #a89a78;
+  flex-shrink: 0;
+}
+
+.audio-volume-slider {
+  width: 90px;
+  accent-color: #c8732a;
+  cursor: pointer;
+}
+
+.audio-error {
+  color: #e8742a;
+  font-size: 0.9rem;
+  cursor: help;
+}
+
+/* در موبایل، پلیر کوچک‌تر */
+@media (max-width: 600px) {
+  .audio-player {
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px 4px 4px;
+  }
+  .audio-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  .audio-player:hover .audio-volume-wrap {
+    max-width: 100px;
+  }
+  .audio-volume-slider {
+    width: 60px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
