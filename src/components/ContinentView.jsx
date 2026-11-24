@@ -2,11 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { isPoiRevealed } from '../engine/timeEngine';
 import { poiHasUnread, getInfoAt } from '../engine/narrative';
 
+// ICONS گسترش‌یافته — هماهنگ با PoiEditor
 const ICONS = {
   city: '🏙',
   landmark: '🏛',
   temple: '⛩',
   ruin: '🪨',
+  port: '⚓',
+  village: '🏘',
+  fortress: '🏰',
+  forest: '🌲',
+  mountain: '⛰',
+};
+
+// fallback نقشه‌ی قاره (اگر continent.mapSvg نبود)
+const DEFAULT_MAP_SVG = {
+  viewBox: '0 0 700 520',
+  background: '#0f1820',
+  landPath: 'M80,80 C 160,40 300,50 420,80 C 540,110 620,160 640,260 C 660,360 600,440 500,470 C 400,500 280,490 180,450 C 80,410 40,320 50,220 C 55,160 65,110 80,80 Z',
+  landFill: 'url(#contLand)',
+  landStroke: '#5a6a48',
+  landStrokeWidth: 2,
+  decorations: [
+    { type: 'ellipse', cx: 150, cy: 300, rx: 80, ry: 60, fill: 'url(#forestPattern)', opacity: 0.7 },
+    { type: 'path', d: 'M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460', stroke: '#3a5a6a', strokeWidth: 4, opacity: 0.8 },
+    { type: 'path', d: 'M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460', stroke: '#5a8a9a', strokeWidth: 1.5, opacity: 0.6 },
+    { type: 'mountains', points: [
+      { x: 480, y: 180 }, { x: 510, y: 200 }, { x: 540, y: 175 },
+      { x: 465, y: 215 }, { x: 525, y: 230 },
+    ], fill: '#4a4030', stroke: '#6a5a40', snowFill: '#e8e0d0', snowOpacity: 0.5 },
+  ],
 };
 
 export default function ContinentView({ continent, state, worldData, lastChanges, onSelectPoi, onBack }) {
@@ -21,6 +46,8 @@ export default function ContinentView({ continent, state, worldData, lastChanges
     }
   }, [lastChanges]);
 
+  const map = continent.mapSvg || DEFAULT_MAP_SVG;
+
   return (
     <div className="continent-view">
       <button className="back-btn" onClick={onBack}>← بازگشت به نقشه دنیا</button>
@@ -28,7 +55,7 @@ export default function ContinentView({ continent, state, worldData, lastChanges
 
       <div className="map-frame">
         <svg
-          viewBox="0 0 700 520"
+          viewBox={map.viewBox || '0 0 700 520'}
           className="continent-svg"
           preserveAspectRatio="xMidYMid meet"
         >
@@ -40,6 +67,10 @@ export default function ContinentView({ continent, state, worldData, lastChanges
               <stop offset="0%" stopColor="#3a4a32" />
               <stop offset="100%" stopColor="#2a3826" />
             </linearGradient>
+            <linearGradient id="contLandSouth" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#4a4030" />
+              <stop offset="100%" stopColor="#3a3224" />
+            </linearGradient>
             <pattern id="forestPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
               <circle cx="10" cy="10" r="3" fill="#1e2a18" opacity="0.6" />
               <circle cx="30" cy="25" r="3" fill="#1e2a18" opacity="0.5" />
@@ -47,55 +78,45 @@ export default function ContinentView({ continent, state, worldData, lastChanges
             </pattern>
           </defs>
 
-          <rect width="700" height="520" fill="#0f1820" />
+          <rect width="100%" height="100%" fill={map.background || '#0f1820'} />
 
+          {/* مسیر اصلی قاره */}
           <path
-            d="M80,80 
-               C 160,40 300,50 420,80 
-               C 540,110 620,160 640,260 
-               C 660,360 600,440 500,470 
-               C 400,500 280,490 180,450 
-               C 80,410 40,320 50,220 
-               C 55,160 65,110 80,80 Z"
-            fill="url(#contLand)"
-            stroke="#5a6a48"
-            strokeWidth="2"
+            d={map.landPath}
+            fill={map.landFill || 'url(#contLand)'}
+            stroke={map.landStroke || '#5a6a48'}
+            strokeWidth={map.landStrokeWidth ?? 2}
             filter="url(#contSoftShadow)"
           />
 
-          <ellipse cx="150" cy="300" rx="80" ry="60" fill="url(#forestPattern)" opacity="0.7" />
-
-          <path
-            d="M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460"
-            fill="none"
-            stroke="#3a5a6a"
-            strokeWidth="4"
-            strokeLinecap="round"
-            opacity="0.8"
-          />
-          <path
-            d="M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460"
-            fill="none"
-            stroke="#5a8a9a"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-
-          {[
-            { x: 480, y: 180 }, { x: 510, y: 200 }, { x: 540, y: 175 },
-            { x: 465, y: 215 }, { x: 525, y: 230 },
-          ].map((m, i) => (
-            <g key={i}>
-              <path d={`M${m.x},${m.y} L${m.x + 18},${m.y + 28} L${m.x - 18},${m.y + 28} Z`} fill="#4a4030" stroke="#6a5a40" strokeWidth="1" />
-              <path d={`M${m.x},${m.y} L${m.x + 8},${m.y + 14} L${m.x - 8},${m.y + 14} Z`} fill="#e8e0d0" opacity="0.5" />
-            </g>
-          ))}
+          {/* تزئینات */}
+          {(map.decorations || []).map((dec, i) => {
+            if (dec.type === 'path') {
+              return <path key={i} d={dec.d} fill={dec.fill || 'none'} stroke={dec.stroke || 'none'} strokeWidth={dec.strokeWidth ?? 1} opacity={dec.opacity ?? 1} />;
+            }
+            if (dec.type === 'ellipse') {
+              return <ellipse key={i} cx={dec.cx} cy={dec.cy} rx={dec.rx} ry={dec.ry} fill={dec.fill || 'none'} stroke={dec.stroke || 'none'} strokeWidth={dec.strokeWidth ?? 1} opacity={dec.opacity ?? 1} />;
+            }
+            if (dec.type === 'mountains') {
+              return (
+                <g key={i}>
+                  {(dec.points || []).map((m, mi) => (
+                    <g key={mi}>
+                      <path d={`M${m.x},${m.y} L${m.x + 18},${m.y + 28} L${m.x - 18},${m.y + 28} Z`} fill={dec.fill || '#4a4030'} stroke={dec.stroke || '#6a5a40'} strokeWidth="1" />
+                      <path d={`M${m.x},${m.y} L${m.x + 8},${m.y + 14} L${m.x - 8},${m.y + 14} Z`} fill={dec.snowFill || '#e8e0d0'} opacity={dec.snowOpacity ?? 0.5} />
+                    </g>
+                  ))}
+                </g>
+              );
+            }
+            return null;
+          })}
 
           <text x="350" y="60" className="continent-map-label" textAnchor="middle">
             {continent.name}
           </text>
 
+          {/* POIها */}
           {continent.pois.map((poi, idx) => {
             if (!isPoiRevealed(poi, state)) return null;
             const info = getInfoAt(poi, state.time);

@@ -849,6 +849,449 @@
   color: #8a7a66;
   margin-top: 4px;
 }
+/* ===== ویرایشگر SVG قاره ===== */
+.svg-editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 1100px) {
+  .svg-editor-grid { grid-template-columns: 1fr; }
+}
+
+.svg-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.svg-editor-form textarea {
+  background: #0f0c0a;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  resize: vertical;
+  direction: ltr;
+}
+.svg-editor-form textarea:focus {
+  outline: none;
+  border-color: #c8732a;
+}
+
+.svg-preview {
+  background: #14100c;
+  border: 1px solid #2e2418;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.svg-preview-label {
+  font-size: 0.78rem;
+  color: #8a7a66;
+  margin-bottom: 6px;
+}
+.svg-preview-canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #0f1820;
+}
+
+.decorations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.decoration-add-buttons {
+  display: flex;
+  gap: 8px;
+}
+.decoration-add-buttons .add-btn {
+  flex: 1;
+}
+/* ============================================
+   درخت — نسخه‌ی کامل و یکدست
+   ============================================ */
+
+.tree-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tree-add-btn {
+  background: #241c14;
+  border: 1px dashed #3a2e20;
+  color: #a89a78;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.72rem;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.tree-add-btn:hover {
+  border-color: #c8732a;
+  color: #e8a85c;
+  background: #2e2418;
+}
+
+/* ردیف قاره و POI */
+.tree-continent-row,
+.tree-poi-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 2px;
+  transition: background 0.15s;
+}
+.tree-continent-row:hover,
+.tree-poi-row:hover {
+  background: #1a1410;
+}
+.tree-continent-row.active,
+.tree-poi-row.active {
+  background: #2e2418;
+  box-shadow: inset 2px 0 0 #c8732a;
+}
+
+/* دکمه‌ی نام (قاره/POI) */
+.tree-label-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #d8cdb8;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: right;
+  transition: color 0.15s;
+}
+.tree-label-btn:hover {
+  color: #f4d8a8;
+}
+.tree-poi .tree-label-btn {
+  font-size: 0.8rem;
+  padding-inline-start: 14px;
+}
+
+/* دکمه‌های آیکونی (+ و ✕) */
+.tree-icon-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  color: #8a7a66;
+  cursor: pointer;
+  font-size: 0.72rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.tree-icon-btn:hover {
+  border-color: #c8732a;
+  color: #e8a85c;
+  background: #241c14;
+}
+.tree-icon-btn.danger:hover {
+  border-color: #e8742a;
+  color: #e8742a;
+  background: rgba(232, 116, 42, 0.1);
+}
+.tree-icon-btn.small {
+  width: 18px;
+  height: 18px;
+  font-size: 0.62rem;
+}
+
+/* ردیف روایت */
+.tree-narrative-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: 14px;
+}
+.tree-narrative-row .tree-narrative-btn {
+  flex: 1;
+}
+
+/* اگر tree-narrative-btn تعریف نشده، این را هم اضافه کن */
+.tree-narratives {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 8px;
+}
+.tree-narrative-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: 1px solid transparent;
+  color: #d8cdb8;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-align: right;
+  transition: background 0.15s, border-color 0.15s;
+}
+.tree-narrative-btn:hover {
+  background: #1a1410;
+}
+.tree-narrative-btn.active {
+  background: #2e2418;
+  border-color: #c8732a;
+  color: #f4d8a8;
+}
+.tree-nar-kind {
+  color: #8a7a66;
+  font-size: 0.68rem;
+  flex-shrink: 0;
+}
+.tree-nar-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* ===== دکمه‌ی اطلاعات دنیا در درخت ===== */
+.tree-world-btn {
+  flex: 1;
+  background: none;
+  border: 1px solid transparent;
+  color: #e8a85c;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: right;
+  transition: background 0.15s, border-color 0.15s;
+}
+.tree-world-btn:hover {
+  background: #2e2418;
+}
+.tree-world-btn.active {
+  background: #2e2418;
+  border-color: #c8732a;
+  color: #f4d8a8;
+}
+
+/* ===== ویرایشگر دنیا ===== */
+.world-editor h3 {
+  font-size: 0.9rem;
+  color: #e8a85c;
+  margin: 20px 0 10px;
+  font-weight: normal;
+}
+
+.timesteps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.timestep-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #14100c;
+  border: 1px solid #2e2418;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.timestep-index {
+  font-size: 0.78rem;
+  color: #8a7a66;
+  min-width: 28px;
+}
+
+.timestep-cumulative {
+  font-size: 0.78rem;
+  color: #e8a85c;
+  min-width: 60px;
+  background: #1a1410;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.timestep-advance {
+  width: 80px;
+  background: #0f0c0a;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+.timestep-advance:focus {
+  outline: none;
+  border-color: #c8732a;
+}
+
+.timestep-note {
+  flex: 1;
+  background: #0f0c0a;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+.timestep-note:focus {
+  outline: none;
+  border-color: #c8732a;
+}
+
+.timesteps-summary {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+/* ===== تب شخصیت‌ها و رویدادها ===== */
+.characters-events-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ce-subtabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #2e2418;
+  padding-bottom: 8px;
+}
+.ce-subtab {
+  background: none;
+  border: 1px solid transparent;
+  color: #a89a78;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+.ce-subtab:hover { color: #f4d8a8; background: #241c14; }
+.ce-subtab.active { background: #2e2418; border-color: #c8732a; color: #f4d8a8; }
+
+.ce-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  min-height: 0;
+}
+.ce-list {
+  border-inline-end: 1px solid #2e2418;
+  padding-inline-end: 12px;
+}
+.ce-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ce-list-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: none;
+  border: 1px solid transparent;
+  color: #d8cdb8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: right;
+  font-size: 0.85rem;
+}
+.ce-list-item:hover { background: #1a1410; }
+.ce-list-item.active { background: #2e2418; border-color: #c8732a; color: #f4d8a8; }
+.ce-list-item small { color: #8a7a66; font-size: 0.7rem; }
+
+.ce-editor {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.multiselect-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: #14100c;
+  border: 1px solid #2e2418;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.multiselect-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  border-radius: 14px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #d8cdb8;
+}
+.multiselect-item:hover { border-color: #c8732a; }
+.multiselect-item input { accent-color: #c8732a; }
+.multiselect-item small { color: #8a7a66; font-size: 0.7rem; }
+/* ===== انتخابگر بصری coords ===== */
+.coords-picker {
+  background: #14100c;
+  border: 1px solid #2e2418;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+.coords-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+.coords-picker-label { color: #8a7a66; }
+.coords-picker-values {
+  color: #e8a85c;
+  font-family: monospace;
+}
+.coords-picker-canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #0f1820;
+  display: block;
+}
 /* ============================================
    واکنش‌گرایی (اختیاری)
    ============================================ */

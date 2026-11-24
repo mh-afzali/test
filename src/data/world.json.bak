@@ -37,15 +37,108 @@
       "name": "سرزمین شمالی",
       "worldSvgId": "continent-north",
       "unlocked": true,
-      "mapSvg": "north.svg",
+      "svg": {
+        "path": "M180,90 C 220,60 300,55 380,75 C 450,90 500,110 520,160 C 540,210 510,260 470,300 C 430,335 380,350 320,345 C 260,340 200,320 160,280 C 120,240 110,190 130,150 C 145,120 160,105 180,90 Z",
+        "fill": "url(#landGradient)",
+        "stroke": "#5a6a48",
+        "strokeWidth": 2.5,
+        "labelX": 320,
+        "labelY": 200,
+        "subLabel": "شمال سرد",
+        "decorations": [
+          {
+            "type": "path",
+            "d": "M220,140 Q 260,120 300,140",
+            "stroke": "#1e2a18",
+            "strokeWidth": 1,
+            "opacity": 0.5
+          },
+          {
+            "type": "path",
+            "d": "M350,200 Q 390,180 420,200",
+            "stroke": "#1e2a18",
+            "strokeWidth": 1,
+            "opacity": 0.5
+          },
+          {
+            "type": "path",
+            "d": "M200,250 Q 240,230 280,250",
+            "stroke": "#1e2a18",
+            "strokeWidth": 1,
+            "opacity": 0.5
+          }
+        ]
+      },
+      "mapSvg": {
+        "viewBox": "0 0 700 520",
+        "background": "#0f1820",
+        "landPath": "M80,80 C 160,40 300,50 420,80 C 540,110 620,160 640,260 C 660,360 600,440 500,470 C 400,500 280,490 180,450 C 80,410 40,320 50,220 C 55,160 65,110 80,80 Z",
+        "landFill": "url(#contLand)",
+        "landStroke": "#5a6a48",
+        "landStrokeWidth": 2,
+        "decorations": [
+          {
+            "type": "ellipse",
+            "cx": 150,
+            "cy": 300,
+            "rx": 80,
+            "ry": 60,
+            "fill": "url(#forestPattern)",
+            "opacity": 0.7
+          },
+          {
+            "type": "path",
+            "d": "M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460",
+            "stroke": "#3a5a6a",
+            "strokeWidth": 4,
+            "opacity": 0.8
+          },
+          {
+            "type": "path",
+            "d": "M400,100 Q 380,180 350,240 T 280,380 Q 270,420 290,460",
+            "stroke": "#5a8a9a",
+            "strokeWidth": 1.5,
+            "opacity": 0.6
+          },
+          {
+            "type": "mountains",
+            "points": [
+              {
+                "x": 480,
+                "y": 180
+              },
+              {
+                "x": 510,
+                "y": 200
+              },
+              {
+                "x": 540,
+                "y": 175
+              },
+              {
+                "x": 465,
+                "y": 215
+              },
+              {
+                "x": 525,
+                "y": 230
+              }
+            ],
+            "fill": "#4a4030",
+            "stroke": "#6a5a40",
+            "snowFill": "#e8e0d0",
+            "snowOpacity": 0.5
+          }
+        ]
+      },
       "pois": [
         {
           "id": "poi_or",
           "name": "شهر اور",
           "type": "city",
           "coords": {
-            "x": 320,
-            "y": 180
+            "x": 403,
+            "y": 277
           },
           "icon": "city",
           "revealTime": null,
@@ -90,7 +183,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "value": "اور پایتخت سرزمین شمالی است، شهری که در سال ۲۰۰ توسط [[char:ملکه آریا]] بنیان گذاشته شد. و عاقا عالی"
+                      "value": "اور پایتخت سرزمین شمالی است، شهری که در سال ۲۰۰ توسط [[char:ملکه آریا]] بنیان گذاشته شد."
                     },
                     {
                       "type": "quote",
@@ -301,7 +394,50 @@
       "name": "سرزمین جنوبی",
       "worldSvgId": "continent-south",
       "unlocked": true,
-      "mapSvg": "south.svg",
+      "svg": {
+        "path": "M600,320 C 650,290 720,280 800,300 C 870,320 920,360 930,420 C 940,480 900,540 830,555 C 760,570 680,555 630,520 C 580,485 560,430 575,380 C 585,350 595,335 600,320 Z",
+        "fill": "url(#landGradientSouth)",
+        "stroke": "#6a5a40",
+        "strokeWidth": 2.5,
+        "labelX": 760,
+        "labelY": 420,
+        "subLabel": "جنوب گرم",
+        "decorations": [
+          {
+            "type": "path",
+            "d": "M660,380 Q 700,360 740,380",
+            "stroke": "#2a2418",
+            "strokeWidth": 1,
+            "opacity": 0.5
+          },
+          {
+            "type": "path",
+            "d": "M720,470 Q 760,450 800,470",
+            "stroke": "#2a2418",
+            "strokeWidth": 1,
+            "opacity": 0.5
+          }
+        ]
+      },
+      "mapSvg": {
+        "viewBox": "0 0 700 520",
+        "background": "#0f1820",
+        "landPath": "M80,80 C 160,40 300,50 420,80 C 540,110 620,160 640,260 C 660,360 600,440 500,470 C 400,500 280,490 180,450 C 80,410 40,320 50,220 C 55,160 65,110 80,80 Z",
+        "landFill": "url(#contLandSouth)",
+        "landStroke": "#6a5a40",
+        "landStrokeWidth": 2,
+        "decorations": [
+          {
+            "type": "ellipse",
+            "cx": 150,
+            "cy": 300,
+            "rx": 80,
+            "ry": 60,
+            "fill": "url(#forestPattern)",
+            "opacity": 0.7
+          }
+        ]
+      },
       "pois": [
         {
           "id": "poi_rival_court",
