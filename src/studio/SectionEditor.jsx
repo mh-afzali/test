@@ -1,5 +1,6 @@
 import React from 'react';
 import ContentBlockEditor from './ContentBlockEditor';
+import DateInput from './DateInput';
 
 export default function SectionEditor({ section, index, onChange, onRemove, onMoveUp, onMoveDown }) {
   const patch = (p) => onChange({ ...section, ...p });
@@ -46,11 +47,12 @@ export default function SectionEditor({ section, index, onChange, onRemove, onMo
             onChange={(e) => patch({ id: e.target.value })}
             placeholder="s1"
           />
+        </div>
+        <div className="field-row">
           <label>triggerTime:</label>
-          <input
-            type="number"
+          <DateInput
             value={section.triggerTime ?? 0}
-            onChange={(e) => patch({ triggerTime: Number(e.target.value) })}
+            onChange={(v) => patch({ triggerTime: v })}
           />
         </div>
         <div className="field-row">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
 export default function TreeSidebar({
   world,
@@ -11,7 +11,35 @@ export default function TreeSidebar({
   onAddNarrative,
   onRemoveNarrative,
 }) {
+  const [collapsed, setCollapsed] = useState(new Set());
+
+  const allContinentIds = useMemo(
+    () => (world?.continents || []).map((c) => c.id),
+    [world]
+  );
+  const allPoiIds = useMemo(() => {
+    const ids = [];
+    for (const c of world?.continents || []) {
+      for (const p of c.pois || []) ids.push(p.id);
+    }
+    return ids;
+  }, [world]);
+
   if (!world) return null;
+
+  const toggle = (id) => {
+    const next = new Set(collapsed);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setCollapsed(next);
+  };
+
+  const collapseAll = () => {
+    setCollapsed(new Set([...allContinentIds, ...allPoiIds]));
+  };
+  const expandAll = () => {
+    setCollapsed(new Set());
+  };
 
   const worldSelected = selected?.kind === 'world';
 
@@ -34,20 +62,43 @@ export default function TreeSidebar({
         </button>
       </div>
 
+      {/* کنترل جمع/باز کردن همه */}
+      <div className="tree-collapse-controls">
+        <button className="tree-collapse-btn" onClick={collapseAll} title="جمع کردن همه">
+          ⊟ جمع همه
+        </button>
+        <button className="tree-collapse-btn" onClick={expandAll} title="باز کردن همه">
+          ⊞ باز کردن همه
+        </button>
+      </div>
+
       {world.continents.map((continent) => {
         const contSelected =
           selected?.kind === 'continent' && selected.id === continent.id;
+        const contCollapsed = collapsed.has(continent.id);
 
         return (
           <div key={continent.id} className="tree-continent">
             {/* === ردیف قاره === */}
             <div className={`tree-continent-row ${contSelected ? 'active' : ''}`}>
               <button
+                className="tree-collapse-toggle"
+                onClick={() => toggle(continent.id)}
+                title={contCollapsed ? 'باز کردن' : 'جمع کردن'}
+              >
+                {contCollapsed ? '▶' : '▼'}
+              </button>
+              <button
                 className="tree-label-btn"
                 onClick={() => onSelect({ kind: 'continent', id: continent.id })}
                 title="ویرایش قاره"
               >
                 🗺 {continent.name}
+                {contCollapsed && (
+                  <span className="tree-collapsed-hint">
+                    ({continent.pois?.length || 0})
+                  </span>
+                )}
               </button>
               <button
                 className="tree-icon-btn"
@@ -71,83 +122,106 @@ export default function TreeSidebar({
               </button>
             </div>
 
-            {/* === POIهای قاره === */}
-            {continent.pois.map((poi) => {
-              const poiSelected =
-                selected?.kind === 'poi' && selected.id === poi.id;
+            {/* === POIهای قاره (اگر جمع نشده) === */}
+            {!contCollapsed &&
+              continent.pois.map((poi) => {
+                const poiSelected =
+                  selected?.kind === 'poi' && selected.id === poi.id;
+                const poiCollapsed = collapsed.has(poi.id);
+                const hasNarratives = (poi.narratives || []).length > 0;
 
-              return (
-                <div key={poi.id} className="tree-poi">
-                  <div className={`tree-poi-row ${poiSelected ? 'active' : ''}`}>
-                    <button
-                      className="tree-label-btn"
-                      onClick={() => onSelect({ kind: 'poi', id: poi.id })}
-                      title="ویرایش POI"
-                    >
-                      📍 {poi.name}
-                    </button>
-                    <button
-                      className="tree-icon-btn"
-                      title="افزودن روایت به این POI"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onAddNarrative(poi.id);
-                      }}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="tree-icon-btn danger"
-                      title="حذف POI"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onRemovePoi(poi.id);
-                      }}
-                    >
-                      ✕
-                    </button>
+                return (
+                  <div key={poi.id} className="tree-poi">
+                    <div className={`tree-poi-row ${poiSelected ? 'active' : ''}`}>
+                      <button
+                        className={`tree-collapse-toggle ${!hasNarratives ? 'disabled' : ''}`}
+                        onClick={() => hasNarratives && toggle(poi.id)}
+                        title={
+                          !hasNarratives
+                            ? 'روایتی ندارد'
+                            : poiCollapsed
+                            ? 'باز کردن'
+                            : 'جمع کردن'
+                        }
+                        disabled={!hasNarratives}
+                      >
+                        {poiCollapsed ? '▶' : '▼'}
+                      </button>
+                      <button
+                        className="tree-label-btn"
+                        onClick={() => onSelect({ kind: 'poi', id: poi.id })}
+                        title="ویرایش POI"
+                      >
+                        📍 {poi.name}
+                        {poiCollapsed && (
+                          <span className="tree-collapsed-hint">
+                            ({poi.narratives?.length || 0})
+                          </span>
+                        )}
+                      </button>
+                      <button
+                        className="tree-icon-btn"
+                        title="افزودن روایت به این POI"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onAddNarrative(poi.id);
+                        }}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="tree-icon-btn danger"
+                        title="حذف POI"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemovePoi(poi.id);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {/* === روایت‌ها (اگر POI جمع نشده) === */}
+                    {!poiCollapsed && (
+                      <ul className="tree-narratives">
+                        {(poi.narratives || []).map((n) => {
+                          const narSelected =
+                            selected?.kind === 'narrative' && selected.id === n.id;
+                          return (
+                            <li key={n.id} className="tree-narrative-row">
+                              <button
+                                className={`tree-narrative-btn ${narSelected ? 'active' : ''}`}
+                                onClick={() =>
+                                  onSelect({
+                                    kind: 'narrative',
+                                    id: n.id,
+                                    poiId: poi.id,
+                                    continentId: continent.id,
+                                  })
+                                }
+                                title="ویرایش روایت"
+                              >
+                                <span className="tree-nar-kind">{n.kind}</span>
+                                <span className="tree-nar-title">{n.title}</span>
+                              </button>
+                              <button
+                                className="tree-icon-btn danger small"
+                                title="حذف روایت"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onRemoveNarrative(n.id);
+                                }}
+                              >
+                                ✕
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </div>
-
-                  {/* === روایت‌های POI === */}
-                  <ul className="tree-narratives">
-                    {(poi.narratives || []).map((n) => {
-                      const narSelected =
-                        selected?.kind === 'narrative' && selected.id === n.id;
-
-                      return (
-                        <li key={n.id} className="tree-narrative-row">
-                          <button
-                            className={`tree-narrative-btn ${narSelected ? 'active' : ''}`}
-                            onClick={() =>
-                              onSelect({
-                                kind: 'narrative',
-                                id: n.id,
-                                poiId: poi.id,
-                                continentId: continent.id,
-                              })
-                            }
-                            title="ویرایش روایت"
-                          >
-                            <span className="tree-nar-kind">{n.kind}</span>
-                            <span className="tree-nar-title">{n.title}</span>
-                          </button>
-                          <button
-                            className="tree-icon-btn danger small"
-                            title="حذف روایت"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onRemoveNarrative(n.id);
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         );
       })}

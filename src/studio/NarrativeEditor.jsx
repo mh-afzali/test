@@ -1,5 +1,6 @@
 import React from 'react';
 import SectionEditor from './SectionEditor';
+import DateInput from './DateInput';
 
 export default function NarrativeEditor({ narrative, onChange }) {
   if (!narrative) return <div className="empty-note">یک روایت از سمت راست انتخاب کن.</div>;
@@ -54,11 +55,11 @@ export default function NarrativeEditor({ narrative, onChange }) {
         </div>
         <div className="field-row">
           <label>endTime:</label>
-          <input
-            type="number"
-            value={narrative.endTime ?? ''}
-            onChange={(e) => patch({ endTime: e.target.value === '' ? null : Number(e.target.value) })}
-            placeholder="خالی = بی‌نهایت"
+          <DateInput
+            value={narrative.endTime}
+            onChange={(v) => patch({ endTime: v })}
+            allowEmpty
+            emptyLabel="بی‌نهایت"
           />
         </div>
         <div className="field-row unlock-row">
@@ -90,18 +91,20 @@ function UnlockEditor({ unlock, onChange }) {
   const current = unlock?.type || 'time';
   return (
     <div className="unlock-editor">
-      <select value={current} onChange={(e) => {
-        if (e.target.value === 'time') onChange({ type: 'time', time: 0 });
-        else onChange({ type: 'story_read', storyId: '' });
-      }}>
+      <select
+        value={current}
+        onChange={(e) => {
+          if (e.target.value === 'time') onChange({ type: 'time', time: 0 });
+          else onChange({ type: 'story_read', storyId: '' });
+        }}
+      >
         <option value="time">time</option>
         <option value="story_read">story_read</option>
       </select>
       {current === 'time' && (
-        <input
-          type="number"
+        <DateInput
           value={unlock?.time ?? 0}
-          onChange={(e) => onChange({ type: 'time', time: Number(e.target.value) })}
+          onChange={(v) => onChange({ type: 'time', time: v })}
         />
       )}
       {current === 'story_read' && (

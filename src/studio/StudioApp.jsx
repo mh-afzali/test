@@ -26,15 +26,19 @@ import {
   updateEvent,
 } from './api';
 import { validateAll } from './validator';
+import { buildExportPayload, downloadPayload } from './exportImport';
 import TreeSidebar from './TreeSidebar';
 import NarrativeEditor from './NarrativeEditor';
 import PoiEditor from './PoiEditor';
 import ContinentEditor from './ContinentEditor';
 import WorldEditor from './WorldEditor';
 import CharactersEventsTab from './CharactersEventsTab';
+import GraphTab from './GraphTab';
 import LivePreview from './LivePreview';
 import ValidationPanel from './ValidationPanel';
 import TimelineSimulator from './TimelineSimulator';
+import ImportDialog from './ImportDialog';
+import SearchModal from './SearchModal';
 import './studio.css';
 
 export default function StudioApp() {
@@ -46,7 +50,10 @@ export default function StudioApp() {
   const [status, setStatus] = useState('');
   const [dirty, setDirty] = useState(false);
   const [jumpTarget, setJumpTarget] = useState(null);
-  const [tab, setTab] = useState('editor'); // 'editor' | 'characters-events' | 'timeline'
+  const [tab, setTab] = useState('editor'); // 'editor' | 'characters-events' | 'graph' | 'timeline'
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(false);
 
   useEffect(() => {
     setWorld(deepClone(worldRaw));
@@ -112,6 +119,26 @@ export default function StudioApp() {
     } catch (e) {
       setStatus(`❌ ${e.message}`);
     }
+  };
+
+  /* ===== Export ===== */
+  const handleExport = () => {
+    const payload = buildExportPayload(world, characters, events);
+    downloadPayload(payload);
+    setStatus('📦 فایل export دانلود شد');
+    setTimeout(() => setStatus(''), 3000);
+  };
+
+  /* ===== Import ===== */
+  const handleImportConfirm = (payload) => {
+    setWorld(payload.world);
+    setCharacters(payload.characters);
+    setEvents(payload.events);
+    setSelected(null);
+    setDirty(true);
+    setStatus('📥 داده‌ها جایگزین شدند (هنوز ذخیره نشده‌اند)');
+    setImportDialogOpen(false);
+    setTimeout(() => setStatus(''), 4000);
   };
 
   /* ===== تغییردهنده‌های روایت ===== */
@@ -227,30 +254,100 @@ export default function StudioApp() {
     markDirty();
   };
 
+  /* ===== گراف — پرش به ویرایشگر ===== */
+  const handleGraphNodeClick = (node) => {
+    if (node.kind === 'continent') {
+      setSelected({ kind: 'continent', id: node.refId });
+      setTab('editor');
+    } else if (node.kind === 'poi') {
+      setSelected({ kind: 'poi', id: node.refId });
+      setTab('editor');
+    } else if (node.kind === 'narrative') {
+      setSelected({ kind: 'narrative', id: node.refId });
+      setTab('editor');
+    } else if (node.kind === 'character' || node.kind === 'event') {
+      setTab('characters-events');
+    }
+  };
+
+  /* ===== جستجوی سراسری — پرش به ویرایشگر ===== */
+  const handleSearchPick = (ref) => {
+    if (ref.kind === 'world') {
+      setSelected({ kind: 'world' });
+      setTab('editor');
+    } else if (ref.kind === 'continent') {
+      setSelected({ kind: 'continent', id: ref.id });
+      setTab('editor');
+    } else if (ref.kind === 'poi') {
+      setSelected({ kind: 'poi', id: ref.id });
+      setTab('editor');
+    } else if (ref.kind === 'narrative') {
+      setSelected({ kind: 'narrative', id: ref.id });
+      setTab('editor');
+    } else if (ref.kind === 'character' || ref.kind === 'event') {
+      setTab('characters-events');
+    }
+  };
+
   /* ===== پرش از خطا ===== */
   const handleJump = (issue) => {
-    if (!issue.narrativeId) return;
-
-    setSelected((prev) =>
-      prev?.kind === 'narrative' && prev.id === issue.narrativeId
-        ? prev
-        : { kind: 'narrative', id: issue.narrativeId }
-    );
-
     setJumpTarget(issue);
 
-    if (issue.sectionId) {
-      const loc = locateNarrative(world, issue.narrativeId);
-      const section = loc?.narrative?.sections?.find(
-        (s) => s.id === issue.sectionId
-      );
-      if (section?.triggerTime != null) {
-        setPreviewTime(section.triggerTime);
+    if (issue.group === 'narrative' && issue.narrativeId) {
+      setSelected({ kind: 'narrative', id: issue.narrativeId });
+      setTab('editor');
+      if (issue.sectionId) {
+        const loc = locateNarrative(world, issue.narrativeId);
+        const section = loc?.narrative?.sections?.find(
+          (s) => s.id === issue.sectionId
+        );
+        if (section?.triggerTime != null) setPreviewTime(section.triggerTime);
       }
+    } else if (issue.group === 'poi' && issue.poiId) {
+      setSelected({ kind: 'poi', id: issue.poiId });
+      setTab('editor');
+    } else if (issue.group === 'continent' && issue.continentId) {
+      setSelected({ kind: 'continent', id: issue.continentId });
+      setTab('editor');
+    } else if (issue.group === 'world') {
+      setSelected({ kind: 'world' });
+      setTab('editor');
+    } else if (issue.group === 'character' || issue.group === 'event') {
+      setTab('characters-events');
     }
 
     setTimeout(() => setJumpTarget(null), 1500);
   };
+
+  /* ===== میانبرهای کیبورد ===== */
+  useEffect(() => {
+    const onKey = (e) => {
+      const mod = e.ctrlKey || e.metaKey;
+
+      if (mod && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      } else if (mod && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (world) handleSave();
+      } else if (e.key === 'Escape') {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [world, characters, events]);
+
+  /* ===== ذخیره‌ی خودکار ===== */
+  useEffect(() => {
+    if (!autoSaveEnabled || !dirty || !world) return;
+    const t = setInterval(() => {
+      if (dirty) handleSave();
+    }, 30000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSaveEnabled, dirty, world, characters, events]);
 
   if (!world) {
     return (
@@ -279,6 +376,12 @@ export default function StudioApp() {
               👤 شخصیت‌ها و رویدادها
             </button>
             <button
+              className={`studio-tab ${tab === 'graph' ? 'active' : ''}`}
+              onClick={() => setTab('graph')}
+            >
+              🕸 گراف ارتباطات
+            </button>
+            <button
               className={`studio-tab ${tab === 'timeline' ? 'active' : ''}`}
               onClick={() => setTab('timeline')}
             >
@@ -292,6 +395,45 @@ export default function StudioApp() {
           {errorCount > 0 && (
             <span className="header-error-count">❌ {errorCount} خطا</span>
           )}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="search-open-btn"
+            title="جستجوی سراسری (Ctrl+K)"
+          >
+            🔍 جستجو
+            <span className="kbd-hint">Ctrl+K</span>
+          </button>
+          <label className="autosave-toggle" title="ذخیره‌ی خودکار هر ۳۰ ثانیه">
+            <input
+              type="checkbox"
+              checked={autoSaveEnabled}
+              onChange={(e) => setAutoSaveEnabled(e.target.checked)}
+            />
+            💾 خودکار
+          </label>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="open-atlas-btn"
+            title="باز کردن اطلس در تب جدید"
+          >
+            🌐 باز کردن اطلس
+          </a>
+          <button
+            onClick={handleExport}
+            className="export-btn"
+            title="دانلود همه‌ی داده‌ها"
+          >
+            📦 Export
+          </button>
+          <button
+            onClick={() => setImportDialogOpen(true)}
+            className="import-btn"
+            title="بارگذاری داده‌ها از فایل"
+          >
+            📥 Import
+          </button>
           <button onClick={handleSave} className="save-btn">
             💾 ذخیره همه
           </button>
@@ -344,7 +486,9 @@ export default function StudioApp() {
                   onChange={handlePoiChange}
                   onDelete={() => handleRemovePoi(selectedEntity.poi.id)}
                   onAddNarrative={() => handleAddNarrative(selectedEntity.poi.id)}
-                  onSelectNarrative={(nid) => setSelected({ kind: 'narrative', id: nid })}
+                  onSelectNarrative={(nid) =>
+                    setSelected({ kind: 'narrative', id: nid })
+                  }
                 />
               )}
               {selectedEntity?.kind === 'narrative' && (
@@ -372,6 +516,13 @@ export default function StudioApp() {
               onAddEvent={handleAddEvent}
               onRemoveEvent={handleRemoveEvent}
               onChangeEvent={handleChangeEvent}
+            />
+          ) : tab === 'graph' ? (
+            <GraphTab
+              world={world}
+              characters={characters}
+              events={events}
+              onNodeClick={handleGraphNodeClick}
             />
           ) : (
             <TimelineSimulator
@@ -409,6 +560,23 @@ export default function StudioApp() {
           />
         </aside>
       </div>
+
+      {/* مودال Import */}
+      <ImportDialog
+        open={importDialogOpen}
+        onClose={() => setImportDialogOpen(false)}
+        onConfirm={handleImportConfirm}
+      />
+
+      {/* مودال جستجو */}
+      <SearchModal
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        world={world}
+        characters={characters}
+        events={events}
+        onPick={handleSearchPick}
+      />
     </div>
   );
 }

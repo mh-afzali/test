@@ -1,10 +1,15 @@
 import React from 'react';
 import { continentHasUnread } from '../engine/narrative';
+import { formatDate } from '../utils/calendar';
 
 export default function WorldMap({ worldData, state, onSelectContinent, onOpenCharacters }) {
   return (
     <div className="world-map">
-      <h1 className="map-title">{worldData.world.name}</h1>
+      <h1 className="map-title">{worldData.world.name}
+        <div className="world-map-date">
+  🗓 {formatDate(state.time)}
+</div>
+</h1> 
 
       <div className="map-frame">
         <svg

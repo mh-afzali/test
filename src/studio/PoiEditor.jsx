@@ -1,6 +1,7 @@
 import React from 'react';
 import InfoVersionEditor from './InfoVersionEditor';
 import PoiCoordsPicker from './PoiCoordsPicker';
+import DateInput from './DateInput';
 
 const POI_ICONS = [
   'city', 'landmark', 'temple', 'ruin', 'port',
@@ -13,8 +14,8 @@ export default function PoiEditor({
   onDelete,
   onAddNarrative,
   onSelectNarrative,
-  world,          // جدید: برای دسترسی به قاره‌ها
-  continent,      // جدید: قاره‌ی همین POI (برای mapSvg)
+  world,
+  continent,
 }) {
   if (!poi) return null;
   const patch = (p) => onChange({ ...poi, ...p });
@@ -43,7 +44,6 @@ export default function PoiEditor({
     });
   };
 
-  // POIهای دیگر همین قاره (برای نمایش در انتخابگر)
   const siblingPois = continent?.pois || [];
 
   return (
@@ -53,7 +53,6 @@ export default function PoiEditor({
         <button className="danger-text-btn" onClick={onDelete}>🗑 حذف POI</button>
       </div>
 
-      {/* ===== فیلدهای پایه ===== */}
       <div className="narrative-fields">
         <div className="field-row">
           <label>id:</label>
@@ -77,16 +76,15 @@ export default function PoiEditor({
         </div>
         <div className="field-row">
           <label>revealTime:</label>
-          <input
-            type="number"
-            value={poi.revealTime ?? ''}
-            onChange={(e) => patch({ revealTime: e.target.value === '' ? null : Number(e.target.value) })}
-            placeholder="خالی = از ابتدا آشکار"
+          <DateInput
+            value={poi.revealTime}
+            onChange={(v) => patch({ revealTime: v })}
+            allowEmpty
+            emptyLabel="از ابتدا آشکار"
           />
         </div>
       </div>
 
-      {/* ===== انتخابگر بصری coords ===== */}
       <h3>🗺 موقعیت روی نقشه</h3>
       {continent?.mapSvg ? (
         <PoiCoordsPicker
@@ -102,7 +100,6 @@ export default function PoiEditor({
         </p>
       )}
 
-      {/* ورودی دستی (برای دقت بالا) */}
       <div className="narrative-fields" style={{ marginTop: 8 }}>
         <div className="field-row">
           <label>coords.x:</label>
@@ -122,7 +119,6 @@ export default function PoiEditor({
         </div>
       </div>
 
-      {/* ===== infoVersions ===== */}
       <h3>📋 infoVersions ({poi.infoVersions?.length || 0})</h3>
       <div className="sections-list">
         {(poi.infoVersions || []).map((v, vi) => (
@@ -139,7 +135,6 @@ export default function PoiEditor({
         <button type="button" className="add-btn" onClick={addVersion}>+ افزودن infoVersion</button>
       </div>
 
-      {/* ===== روایت‌ها ===== */}
       <h3>📖 روایت‌های این POI ({poi.narratives?.length || 0})</h3>
       <div className="narrative-shortcuts">
         {(poi.narratives || []).map((n) => (

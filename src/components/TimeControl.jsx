@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedNumber from './AnimatedNumber';
+import { formatDate } from '../utils/calendar';
 
 export default function TimeControl({ state, worldData, onChange, lastChanges }) {
   const steps = worldData.timeSteps;
@@ -28,7 +29,7 @@ export default function TimeControl({ state, worldData, onChange, lastChanges })
   return (
     <div className={`time-control ${isAdvancing ? 'is-advancing' : ''}`}>
       <div className="time-current">
-        سال <AnimatedNumber value={state.time} />
+        <span className="time-current">{formatDate(state.time)}</span>
       </div>
 
       <button

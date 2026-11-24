@@ -1,4 +1,6 @@
 import React from 'react';
+import DateInput from './DateInput';
+import { formatDate } from '../utils/calendar';
 
 export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChangeTimeSteps }) {
   const patchMeta = (p) => onChangeMeta({ ...worldMeta, ...p });
@@ -22,7 +24,6 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
     onChangeTimeSteps([...timeSteps, { advance: 30, note: 'گام جدید' }]);
   };
 
-  // محاسبه‌ی زمان تجمعی هر گام
   const cumulativeTimes = [];
   let acc = worldMeta?.startTime ?? 0;
   for (const s of timeSteps) {
@@ -36,7 +37,6 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
         <h2 className="editor-title">🌍 {worldMeta?.name || '(بدون نام)'}</h2>
       </div>
 
-      {/* ===== اطلاعات پایه ===== */}
       <h3>📌 اطلاعات پایه</h3>
       <div className="narrative-fields">
         <div className="field-row">
@@ -65,23 +65,24 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
           />
         </div>
         <div className="field-row">
-          <label>startTime:</label>
-          <input
-            type="number"
+          <label>تاریخ شروع داستان:</label>
+          <DateInput
             value={worldMeta?.startTime ?? 0}
-            onChange={(e) => patchMeta({ startTime: Number(e.target.value) })}
+            onChange={(v) => patchMeta({ startTime: v })}
           />
         </div>
       </div>
       <p className="empty-note" style={{ fontSize: '0.78rem' }}>
-        ⚠️ فیلد <code>id</code> در <code>gameState.js</code> و ذخیره‌سازی استفاده می‌شود.
-        <code>mapSvg</code> فعلاً در کد استفاده نمی‌شود (نقشه inline است).
+        📅 «تاریخ شروع داستان» = زمانی که بازی از آن شروع می‌شود.
+        مبدأ تقویم همیشه سال ۱ ماه ۱ روز ۱ است.
+        <br />
+        ⚠️ <code>id</code> در <code>gameState.js</code> استفاده می‌شود.
+        <code>mapSvg</code> فعلاً در کد استفاده نمی‌شود.
       </p>
 
-      {/* ===== timeSteps ===== */}
       <h3>⏳ گام‌های زمانی (timeSteps) — {timeSteps.length} گام</h3>
       <p className="empty-note" style={{ fontSize: '0.78rem' }}>
-        هر گام، مقدار <code>advance</code> را به زمان فعلی اضافه می‌کند.
+        هر گام، مقدار <code>advance</code> (به روز) را به زمان فعلی اضافه می‌کند.
         جمع همه‌ی گام‌ها + startTime = حداکثر زمان بازی.
       </p>
 
@@ -90,7 +91,7 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
           <div key={i} className="timestep-row">
             <span className="timestep-index">#{i + 1}</span>
             <span className="timestep-cumulative" title="زمان تجمعی">
-              → {cumulativeTimes[i]}
+              → {formatDate(cumulativeTimes[i])}
             </span>
             <input
               type="number"
@@ -99,8 +100,10 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
               onChange={(e) =>
                 updateStep(i, { ...step, advance: Number(e.target.value) })
               }
-              title="advance"
+              title="advance (روز)"
+              style={{ width: 70 }}
             />
+            <span className="timestep-advance-label">روز</span>
             <input
               type="text"
               className="timestep-note"
@@ -122,7 +125,9 @@ export default function WorldEditor({ worldMeta, timeSteps, onChangeMeta, onChan
 
       <div className="timesteps-summary">
         <div className="sim-stat">
-          <div className="sim-stat-value">{cumulativeTimes[cumulativeTimes.length - 1] ?? worldMeta?.startTime ?? 0}</div>
+          <div className="sim-stat-value">
+            {formatDate(cumulativeTimes[cumulativeTimes.length - 1] ?? worldMeta?.startTime ?? 0)}
+          </div>
           <div className="sim-stat-label">حداکثر زمان بازی</div>
         </div>
         <div className="sim-stat">

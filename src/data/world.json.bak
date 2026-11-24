@@ -137,8 +137,8 @@
           "name": "شهر اور",
           "type": "city",
           "coords": {
-            "x": 403,
-            "y": 277
+            "x": 323,
+            "y": 245
           },
           "icon": "city",
           "revealTime": null,

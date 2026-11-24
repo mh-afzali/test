@@ -1,4 +1,5 @@
 import React from 'react';
+import DateInput from './DateInput';
 
 const EVENT_TYPES = ['war', 'peace', 'disaster', 'discovery', 'political', 'religious', 'natural'];
 const STATUS_OPTIONS = ['در جریان', 'پایان‌یافته', 'آینده'];
@@ -81,18 +82,19 @@ export default function EventEditor({ event, world, characters, events, onChange
         </div>
         <div className="field-row">
           <label>startTime:</label>
-          <input type="number" value={event.startTime ?? 0} onChange={(e) => patch({ startTime: Number(e.target.value) })} />
+          <DateInput value={event.startTime ?? 0} onChange={(v) => patch({ startTime: v })} />
+        </div>
+        <div className="field-row">
           <label>endTime:</label>
-          <input
-            type="number"
-            value={event.endTime ?? ''}
-            onChange={(e) => patch({ endTime: e.target.value === '' ? null : Number(e.target.value) })}
-            placeholder="خالی = بی‌نهایت"
+          <DateInput
+            value={event.endTime}
+            onChange={(v) => patch({ endTime: v })}
+            allowEmpty
+            emptyLabel="بی‌نهایت"
           />
         </div>
       </div>
 
-      {/* مکان‌ها */}
       <h3>📍 مکان‌ها ({event.locationIds?.length || 0})</h3>
       <div className="multiselect-box">
         {allPois.map((p) => (
@@ -109,7 +111,6 @@ export default function EventEditor({ event, world, characters, events, onChange
         {allPois.length === 0 && <p className="empty-note">هیچ POIای وجود ندارد.</p>}
       </div>
 
-      {/* شرکت‌کنندگان */}
       <h3>👥 شرکت‌کنندگان ({event.participants?.length || 0})</h3>
       <div className="multiselect-box">
         {(characters || []).map((c) => (
@@ -126,7 +127,6 @@ export default function EventEditor({ event, world, characters, events, onChange
         {(characters || []).length === 0 && <p className="empty-note">هیچ شخصیتی وجود ندارد.</p>}
       </div>
 
-      {/* رویدادهای مرتبط */}
       <h3>🔗 رویدادهای مرتبط ({event.relatedEvents?.length || 0})</h3>
       <div className="multiselect-box">
         {(events || []).filter((e) => e.id !== event.id).map((e) => (
@@ -142,7 +142,6 @@ export default function EventEditor({ event, world, characters, events, onChange
         ))}
       </div>
 
-      {/* versions */}
       <h3>📅 versions ({event.versions?.length || 0})</h3>
       <div className="sections-list">
         {(event.versions || []).map((v, vi) => (
@@ -158,13 +157,18 @@ export default function EventEditor({ event, world, characters, events, onChange
             <div className="block-fields">
               <div className="field-row">
                 <label>from:</label>
-                <input type="number" value={v.from ?? 0} onChange={(e) => updateVersion(vi, { ...v, from: Number(e.target.value) })} />
+                <DateInput
+                  value={v.from ?? 0}
+                  onChange={(nv) => updateVersion(vi, { ...v, from: nv })}
+                />
+              </div>
+              <div className="field-row">
                 <label>to:</label>
-                <input
-                  type="number"
-                  value={v.to ?? ''}
-                  onChange={(e) => updateVersion(vi, { ...v, to: e.target.value === '' ? null : Number(e.target.value) })}
-                  placeholder="خالی = بی‌نهایت"
+                <DateInput
+                  value={v.to}
+                  onChange={(nv) => updateVersion(vi, { ...v, to: nv })}
+                  allowEmpty
+                  emptyLabel="بی‌نهایت"
                 />
               </div>
               <div className="field-row">

@@ -1,4 +1,5 @@
 import React from 'react';
+import DateInput from './DateInput';
 
 const STATUS_OPTIONS = ['زنده', 'مرده', 'مفقود', 'اسطوره'];
 
@@ -80,13 +81,18 @@ export default function CharacterEditor({ character, world, onChange, onDelete }
             <div className="block-fields">
               <div className="field-row">
                 <label>from:</label>
-                <input type="number" value={v.from ?? 0} onChange={(e) => updateVersion(vi, { ...v, from: Number(e.target.value) })} />
+                <DateInput
+                  value={v.from ?? 0}
+                  onChange={(nv) => updateVersion(vi, { ...v, from: nv })}
+                />
+              </div>
+              <div className="field-row">
                 <label>to:</label>
-                <input
-                  type="number"
-                  value={v.to ?? ''}
-                  onChange={(e) => updateVersion(vi, { ...v, to: e.target.value === '' ? null : Number(e.target.value) })}
-                  placeholder="خالی = بی‌نهایت"
+                <DateInput
+                  value={v.to}
+                  onChange={(nv) => updateVersion(vi, { ...v, to: nv })}
+                  allowEmpty
+                  emptyLabel="بی‌نهایت"
                 />
               </div>
               <div className="field-row">

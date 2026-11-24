@@ -802,6 +802,14 @@ body {
   transform: none;
 }
 
+.world-map-date {
+  text-align: center;
+  color: #a89a78;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  font-family: 'Vazirmatn', serif;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
