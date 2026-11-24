@@ -1,0 +1,32 @@
+[
+  {
+    "id": "event_fall_of_or",
+    "name": "سقوط اور",
+    "eventType": "war",
+    "startTime": 348,
+    "endTime": 350,
+    "locationIds": [
+      "poi_or",
+      "poi_war_room"
+    ],
+    "versions": [
+      {
+        "from": 348,
+        "to": 350,
+        "status": "در جریان",
+        "summary": "سپاه جنوب از رودخانه گذشت و اور را محاصره کرد."
+      },
+      {
+        "from": 350,
+        "to": null,
+        "status": "پایان‌یافته",
+        "summary": "دیوارهای اور فرو ریخت. شهر ویران شد. ملکه آریا کشته شد."
+      }
+    ],
+    "participants": [
+      "char_aria",
+      "char_king"
+    ],
+    "relatedEvents": []
+  }
+]

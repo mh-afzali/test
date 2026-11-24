@@ -2,10 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import worldRaw from '../data/world.json';
 import charactersRaw from '../data/characters.json';
 import eventsRaw from '../data/events.json';
-import { saveDataFile, deepClone, locateNarrative, updateNarrative, validateWorld } from './api';
+import {
+  saveDataFile,
+  deepClone,
+  locateNarrative,
+  updateNarrative,
+} from './api';
+import { validateAll } from './validator';
 import TreeSidebar from './TreeSidebar';
 import NarrativeEditor from './NarrativeEditor';
 import LivePreview from './LivePreview';
+import ValidationPanel from './ValidationPanel';
+import TimelineSimulator from './TimelineSimulator';
 import './studio.css';
 
 export default function StudioApp() {
@@ -15,23 +23,41 @@ export default function StudioApp() {
   const [selected, setSelected] = useState(null);
   const [previewTime, setPreviewTime] = useState(0);
   const [status, setStatus] = useState('');
-  const [errors, setErrors] = useState([]);
   const [dirty, setDirty] = useState(false);
+  const [jumpTarget, setJumpTarget] = useState(null);
+  const [tab, setTab] = useState('editor'); // 'editor' | 'timeline'
 
+  // بارگذاری اولیه از فایل‌های واقعی پروژه (کپی عمیق برای جلوگیری از mutation)
   useEffect(() => {
     setWorld(deepClone(worldRaw));
     setCharacters(deepClone(charactersRaw));
     setEvents(deepClone(eventsRaw));
-    setErrors(validateWorld(worldRaw));
   }, []);
 
+  // روایت انتخاب‌شده
   const selectedNarrative = useMemo(() => {
     if (!world || !selected?.narrativeId) return null;
     const loc = locateNarrative(world, selected.narrativeId);
     return loc?.narrative || null;
   }, [world, selected]);
 
+  // اعتبارسنجی کامل (با useMemo فقط وقتی داده تغییر کند اجرا می‌شود)
+  const issues = useMemo(
+    () => (world ? validateAll(world, characters || [], events || []) : []),
+    [world, characters, events]
+  );
+
   const handleSave = async () => {
+    const errs = validateAll(world, characters, events).filter(
+      (i) => i.level === 'error'
+    );
+    if (errs.length > 0) {
+      const ok = window.confirm(
+        `⚠️ ${errs.length} خطای ساختاری وجود دارد. باز هم ذخیره شود؟`
+      );
+      if (!ok) return;
+    }
+
     setStatus('در حال ذخیره...');
     try {
       await saveDataFile('world.json', world);
@@ -45,43 +71,105 @@ export default function StudioApp() {
   };
 
   const handleNarrativeChange = (newNarrative) => {
+    if (!selected?.narrativeId) return;
     setWorld((w) => updateNarrative(w, selected.narrativeId, () => newNarrative));
     setDirty(true);
-    const errs = validateWorld(world);
-    setErrors(errs);
+    setStatus('');
   };
 
-  if (!world) return <div style={{ padding: 24 }}>در حال بارگذاری...</div>;
+  // پرش از روی خطای اعتبارسنجی
+  const handleJump = (issue) => {
+    if (!issue.narrativeId) return;
+
+    // انتخاب روایت مربوطه
+    setSelected((prev) =>
+      prev?.narrativeId === issue.narrativeId
+        ? prev
+        : { narrativeId: issue.narrativeId }
+    );
+
+    setJumpTarget(issue);
+
+    // اگر بخش مشخصی داشت، زمان پیش‌نمایش را روی triggerTime آن تنظیم کن
+    if (issue.sectionId) {
+      const loc = locateNarrative(world, issue.narrativeId);
+      const section = loc?.narrative?.sections?.find(
+        (s) => s.id === issue.sectionId
+      );
+      if (section?.triggerTime != null) {
+        setPreviewTime(section.triggerTime);
+      }
+    }
+
+    // پاک‌کردن نشانگر پرش بعد از ۱.۵ ثانیه
+    setTimeout(() => setJumpTarget(null), 1500);
+  };
+
+  if (!world) {
+    return <div style={{ padding: 24, color: '#f4ecd8' }}>در حال بارگذاری...</div>;
+  }
+
+  const errorCount = issues.filter((i) => i.level === 'error').length;
 
   return (
     <div className="studio-root">
       <header className="studio-header">
-        <h1>🎨 استودیو اطلس</h1>
+        <div className="studio-header-left">
+          <h1>🎨 استودیو اطلس</h1>
+          <div className="studio-tabs">
+            <button
+              className={`studio-tab ${tab === 'editor' ? 'active' : ''}`}
+              onClick={() => setTab('editor')}
+            >
+              ✏️ ویرایشگر
+            </button>
+            <button
+              className={`studio-tab ${tab === 'timeline' ? 'active' : ''}`}
+              onClick={() => setTab('timeline')}
+            >
+              🕰 شبیه‌ساز تایم‌لاین
+            </button>
+          </div>
+        </div>
         <div className="studio-header-actions">
           {dirty && <span className="dirty-badge">● تغییرات ذخیره‌نشده</span>}
-          <button onClick={handleSave} className="save-btn">💾 ذخیره همه</button>
+          {errorCount > 0 && (
+            <span className="header-error-count">❌ {errorCount} خطا</span>
+          )}
+          <button onClick={handleSave} className="save-btn">
+            💾 ذخیره همه
+          </button>
           {status && <span className="status">{status}</span>}
         </div>
       </header>
 
       <div className="studio-body">
+        {/* ستون چپ: درخت */}
         <aside className="studio-sidebar">
           <TreeSidebar world={world} selected={selected} onSelect={setSelected} />
         </aside>
 
+        {/* ستون وسط: بسته به تب */}
         <main className="studio-main">
-          <NarrativeEditor
-            narrative={selectedNarrative}
-            onChange={handleNarrativeChange}
-          />
-          {errors.length > 0 && (
-            <div className="validation-box">
-              <strong>⚠️ خطاهای ساختاری:</strong>
-              <ul>{errors.map((e, i) => <li key={i}>{e}</li>)}</ul>
-            </div>
+          {tab === 'editor' ? (
+            <>
+              <NarrativeEditor
+                narrative={selectedNarrative}
+                onChange={handleNarrativeChange}
+                jumpTarget={jumpTarget}
+              />
+              <ValidationPanel issues={issues} onJump={handleJump} />
+            </>
+          ) : (
+            <TimelineSimulator
+              world={world}
+              characters={characters}
+              events={events}
+            />
           )}
         </main>
 
+        {/* ستون راست: پیش‌نمایش زنده */}
         <aside className="studio-preview">
           <div className="preview-time-control">
             <label>زمان پیش‌نمایش:</label>

@@ -1,3 +1,7 @@
+/* ============================================
+   استودیو اطلس — استایل کامل
+   ============================================ */
+
 .studio-root {
   display: flex;
   flex-direction: column;
@@ -5,8 +9,10 @@
   background: #0f0c0a;
   color: #f4ecd8;
   font-family: 'Vazirmatn', Tahoma, sans-serif;
+  direction: rtl;
 }
 
+/* ===== هدر ===== */
 .studio-header {
   display: flex;
   align-items: center;
@@ -14,17 +20,49 @@
   padding: 10px 16px;
   background: #1a1410;
   border-bottom: 1px solid #3a2e20;
+  flex-shrink: 0;
 }
-.studio-header h1 { margin: 0; font-size: 1.1rem; color: #e8a85c; }
-.studio-header-actions { display: flex; align-items: center; gap: 12px; }
-.dirty-badge { color: #e8742a; font-size: 0.85rem; }
+.studio-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #e8a85c;
+}
+.studio-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dirty-badge {
+  color: #e8742a;
+  font-size: 0.85rem;
+}
+.header-error-count {
+  font-size: 0.82rem;
+  color: #e88a8a;
+  background: rgba(200, 60, 60, 0.15);
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 60, 60, 0.3);
+}
 .save-btn {
-  background: #c8732a; color: #f4ecd8; border: none;
-  padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit;
+  background: #c8732a;
+  color: #f4ecd8;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
 }
-.save-btn:hover { background: #e8a85c; }
-.status { font-size: 0.85rem; color: #a89a78; }
+.save-btn:hover {
+  background: #e8a85c;
+}
+.status {
+  font-size: 0.85rem;
+  color: #a89a78;
+}
 
+/* ===== چیدمان سه‌ستونه ===== */
 .studio-body {
   flex: 1;
   display: grid;
@@ -32,48 +70,126 @@
   min-height: 0;
 }
 
+/* ===== ستون چپ: درخت ===== */
 .studio-sidebar {
   border-inline-end: 1px solid #3a2e20;
   overflow-y: auto;
   padding: 12px;
   background: #14100c;
 }
-.tree-title { font-size: 0.95rem; color: #e8a85c; margin: 0 0 12px; }
-.tree-continent { margin-bottom: 14px; }
-.tree-continent-name { font-size: 0.85rem; color: #a89a78; margin-bottom: 6px; }
-.tree-poi { margin-inline-start: 10px; margin-bottom: 8px; }
-.tree-poi-name { font-size: 0.8rem; color: #8a7a66; margin-bottom: 4px; }
-.tree-narratives { list-style: none; padding: 0; margin: 0; }
-.tree-narrative-btn {
-  display: flex; gap: 6px; width: 100%;
-  background: none; border: 1px solid transparent;
-  color: #d8cdb8; padding: 5px 8px; border-radius: 5px;
-  cursor: pointer; font-family: inherit; font-size: 0.82rem; text-align: right;
+.tree-title {
+  font-size: 0.95rem;
+  color: #e8a85c;
+  margin: 0 0 12px;
 }
-.tree-narrative-btn:hover { background: #241c14; }
-.tree-narrative-btn.active { background: #2e2418; border-color: #c8732a; color: #f4d8a8; }
-.tree-nar-kind { color: #8a7a66; font-size: 0.7rem; }
-.tree-nar-title { flex: 1; }
+.tree-continent {
+  margin-bottom: 14px;
+}
+.tree-continent-name {
+  font-size: 0.85rem;
+  color: #a89a78;
+  margin-bottom: 6px;
+}
+.tree-poi {
+  margin-inline-start: 10px;
+  margin-bottom: 8px;
+}
+.tree-poi-name {
+  font-size: 0.8rem;
+  color: #8a7a66;
+  margin-bottom: 4px;
+}
+.tree-narratives {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tree-narrative-btn {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: 1px solid transparent;
+  color: #d8cdb8;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  text-align: right;
+}
+.tree-narrative-btn:hover {
+  background: #241c14;
+}
+.tree-narrative-btn.active {
+  background: #2e2418;
+  border-color: #c8732a;
+  color: #f4d8a8;
+}
+.tree-nar-kind {
+  color: #8a7a66;
+  font-size: 0.7rem;
+}
+.tree-nar-title {
+  flex: 1;
+}
 
+/* ===== ستون وسط: ویرایشگر ===== */
 .studio-main {
   overflow-y: auto;
   padding: 16px 20px;
   background: #0f0c0a;
 }
-.editor-title { margin-top: 0; color: #e8a85c; font-size: 1.2rem; }
-
-.narrative-fields, .section-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.field-row { display: flex; align-items: center; gap: 8px; }
-.field-row label { font-size: 0.8rem; color: #8a7a66; min-width: 70px; }
-.field-row input, .field-row select {
-  flex: 1; background: #1a1410; border: 1px solid #3a2e20; color: #f4ecd8;
-  padding: 6px 8px; border-radius: 5px; font-family: inherit; font-size: 0.85rem;
+.editor-title {
+  margin-top: 0;
+  color: #e8a85c;
+  font-size: 1.2rem;
 }
-.field-row input:focus, .field-row select:focus { outline: none; border-color: #c8732a; }
 
-.unlock-editor { display: flex; gap: 8px; flex: 1; }
-.unlock-editor select { flex: 0 0 120px; }
+.narrative-fields,
+.section-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field-row label {
+  font-size: 0.8rem;
+  color: #8a7a66;
+  min-width: 70px;
+}
+.field-row input,
+.field-row select {
+  flex: 1;
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+.field-row input:focus,
+.field-row select:focus {
+  outline: none;
+  border-color: #c8732a;
+}
 
+.unlock-editor {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+.unlock-editor select {
+  flex: 0 0 120px;
+}
+
+/* ===== بخش‌ها ===== */
 .section-editor {
   background: #14100c;
   border: 1px solid #2e2418;
@@ -81,62 +197,676 @@
   padding: 12px;
   margin-bottom: 12px;
 }
-.section-editor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.section-index { color: #e8a85c; font-size: 0.85rem; }
-.block-actions { display: flex; gap: 4px; }
+.section-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.section-index {
+  color: #e8a85c;
+  font-size: 0.85rem;
+}
+.block-actions {
+  display: flex;
+  gap: 4px;
+}
 .block-actions button {
-  background: #241c14; border: 1px solid #3a2e20; color: #d8cdb8;
-  width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+  background: #241c14;
+  border: 1px solid #3a2e20;
+  color: #d8cdb8;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.block-actions button:hover { border-color: #c8732a; }
-.block-actions button.danger:hover { border-color: #e8742a; color: #e8742a; }
+.block-actions button:hover {
+  border-color: #c8732a;
+}
+.block-actions button.danger:hover {
+  border-color: #e8742a;
+  color: #e8742a;
+}
 
+/* ===== بلاک‌ها ===== */
 .block-editor {
-  background: #1a1410; border: 1px solid #2e2418;
-  border-radius: 6px; padding: 8px; margin-bottom: 8px;
+  background: #1a1410;
+  border: 1px solid #2e2418;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
 }
-.block-editor-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.block-index { color: #8a7a66; font-size: 0.75rem; }
+.block-editor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.block-index {
+  color: #8a7a66;
+  font-size: 0.75rem;
+}
 .block-editor-header select {
-  background: #241c14; border: 1px solid #3a2e20; color: #f4ecd8;
-  padding: 3px 6px; border-radius: 4px; font-family: inherit; font-size: 0.8rem;
+  background: #241c14;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
 }
-.block-fields { display: flex; flex-direction: column; gap: 6px; }
-.block-fields textarea, .block-fields input {
-  background: #0f0c0a; border: 1px solid #3a2e20; color: #f4ecd8;
-  padding: 6px 8px; border-radius: 4px; font-family: inherit; font-size: 0.85rem;
+.block-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.block-fields textarea,
+.block-fields input {
+  background: #0f0c0a;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
   resize: vertical;
 }
-.block-fields textarea:focus, .block-fields input:focus { outline: none; border-color: #c8732a; }
+.block-fields textarea:focus,
+.block-fields input:focus {
+  outline: none;
+  border-color: #c8732a;
+}
 
 .add-btn {
-  background: #241c14; border: 1px dashed #3a2e20; color: #a89a78;
-  padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;
-  font-family: inherit; font-size: 0.85rem;
+  background: #241c14;
+  border: 1px dashed #3a2e20;
+  color: #a89a78;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.85rem;
 }
-.add-btn:hover { border-color: #c8732a; color: #e8a85c; }
-
-.validation-box {
-  margin-top: 16px; padding: 10px 14px;
-  background: rgba(200, 60, 60, 0.1); border: 1px solid rgba(200, 60, 60, 0.4);
-  border-radius: 6px; font-size: 0.85rem; color: #e88a8a;
+.add-btn:hover {
+  border-color: #c8732a;
+  color: #e8a85c;
 }
-.validation-box ul { margin: 6px 0 0; padding-inline-start: 20px; }
 
+.empty-note {
+  color: #8a7a66;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* ===== اعتبارسنجی ===== */
+.validation-panel {
+  margin-top: 16px;
+  border: 1px solid #2e2418;
+  border-radius: 8px;
+  background: #14100c;
+  overflow: hidden;
+}
+.validation-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  background: #1a1410;
+  border-bottom: 1px solid #2e2418;
+  font-size: 0.85rem;
+  color: #d8cdb8;
+}
+.validation-panel-header:hover {
+  background: #241c14;
+}
+.vcount {
+  margin-inline-start: 8px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+.vcount.error {
+  background: rgba(200, 60, 60, 0.2);
+  color: #e88a8a;
+}
+.vcount.warn {
+  background: rgba(232, 116, 42, 0.2);
+  color: #e8a85c;
+}
+.vcount.ok {
+  background: rgba(80, 160, 80, 0.2);
+  color: #8fd08f;
+}
+.toggle {
+  font-size: 0.7rem;
+  color: #8a7a66;
+}
+
+.validation-filters {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2e2418;
+}
+.validation-filters button {
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  color: #a89a78;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+.validation-filters button.active {
+  background: #2e2418;
+  color: #f4d8a8;
+  border-color: #c8732a;
+}
+
+.validation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.validation-item {
+  display: flex;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border-bottom: 1px solid #1a1410;
+}
+.validation-item:hover {
+  background: #1a1410;
+}
+.validation-item.error .vlevel {
+  color: #e88a8a;
+}
+.validation-item.warning .vlevel {
+  color: #e8a85c;
+}
+.vlevel {
+  flex-shrink: 0;
+}
+.vmsg {
+  color: #d8cdb8;
+}
+.validation-empty {
+  padding: 12px;
+  color: #8a7a66;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ===== ستون راست: پیش‌نمایش ===== */
 .studio-preview {
   border-inline-start: 1px solid #3a2e20;
-  display: flex; flex-direction: column; min-height: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   background: #14100c;
 }
 .preview-time-control {
-  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
-  border-bottom: 1px solid #3a2e20; font-size: 0.8rem; color: #a89a78;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #3a2e20;
+  font-size: 0.8rem;
+  color: #a89a78;
+  flex-shrink: 0;
 }
-.preview-time-control input[type="range"] { flex: 1; accent-color: #c8732a; }
+.preview-time-control input[type="range"] {
+  flex: 1;
+  accent-color: #c8732a;
+}
 .preview-time-control input[type="number"] {
-  background: #1a1410; border: 1px solid #3a2e20; color: #f4ecd8;
-  padding: 3px 6px; border-radius: 4px; font-family: inherit;
+  background: #1a1410;
+  border: 1px solid #3a2e20;
+  color: #f4ecd8;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: inherit;
 }
-.live-preview { flex: 1; overflow-y: auto; padding: 12px; }
-.preview-toolbar { font-size: 0.8rem; color: #8a7a66; margin-bottom: 8px; }
-.preview-stage { background: #1a1410; border-radius: 8px; padding: 12px; }
+.live-preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0;
+}
+.preview-toolbar {
+  font-size: 0.8rem;
+  color: #8a7a66;
+  margin-bottom: 8px;
+}
+.preview-stage {
+  background: #1a1410;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+/* ============================================
+   استایل‌های پیش‌نمایش (بازسازی تم اطلس)
+   چون در استودیو فایل styles.css اصلی import نمی‌شود،
+   این‌ها را برای هم‌شکل بودن NarrativeReader/ContentBlocks اضافه می‌کنیم.
+   ============================================ */
+
+/* --- متغیرهای تم اصلی --- */
+.preview-stage {
+  --bg: #1a1410;
+  --paper: #f4ecd8;
+  --ink: #2b1f14;
+  --accent: #c8732a;
+  --accent-soft: #e8a85c;
+  --unread: #e8742a;
+  --muted: #8a7a66;
+}
+
+/* --- خواننده روایت --- */
+.preview-stage .narrative-reader {
+  color: var(--paper);
+}
+.preview-stage .narrative-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.preview-stage .narrative-header h2 {
+  margin: 0;
+  color: var(--accent-soft);
+  font-size: 1.2rem;
+}
+.preview-stage .narrative-kind-tag {
+  background: #2e2418;
+  color: var(--accent-soft);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+.preview-stage .narrative-body {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 20px;
+  border-radius: 12px;
+  line-height: 2;
+}
+.preview-stage .narrative-section {
+  margin-bottom: 24px;
+  animation: none; /* در استودیو انیمیشن ورود لازم نیست */
+}
+.preview-stage .section-title {
+  color: #6b4a2a;
+  border-bottom: 1px solid #d8c8a8;
+  padding-bottom: 6px;
+  font-size: 1.05rem;
+}
+
+/* --- بلاک‌های محتوا --- */
+.preview-stage .content-block {
+  opacity: 1 !important;   /* در پیش‌نمایش همیشه دیده شوند */
+  transform: none !important;
+  transition: none !important;
+}
+.preview-stage .block-text {
+  margin: 0 0 16px;
+}
+.preview-stage .block-image img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.preview-stage .block-image figcaption {
+  font-size: 0.85rem;
+  color: #7a6a5a;
+  text-align: center;
+  margin-top: 6px;
+}
+.preview-stage .block-dialogue {
+  margin: 12px 0;
+  padding-right: 16px;
+  border-right: 3px solid var(--accent);
+}
+.preview-stage .block-dialogue .speaker {
+  font-weight: bold;
+  color: #6b4a2a;
+  margin-left: 8px;
+}
+.preview-stage .block-quote {
+  border-right: 4px solid var(--accent);
+  background: #efe4cc;
+  margin: 16px 0;
+  padding: 12px 20px;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+.preview-stage .block-quote p {
+  margin: 0;
+}
+.preview-stage .block-quote cite {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #7a6a5a;
+  font-style: normal;
+}
+.preview-stage .block-callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+.preview-stage .callout-note {
+  background: #efe4cc;
+  border-right: 4px solid var(--accent);
+}
+.preview-stage .callout-warning {
+  background: #f4e0d0;
+  border-right: 4px solid #c04020;
+}
+.preview-stage .callout-lore {
+  background: #e0e8d8;
+  border-right: 4px solid #4a6a3a;
+}
+.preview-stage .block-scene {
+  margin: 20px 0;
+  padding: 16px;
+  background: #efe4cc;
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+}
+.preview-stage .scene-header {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #7a6a5a;
+  margin-bottom: 8px;
+}
+.preview-stage .scene-text {
+  margin: 0;
+  font-style: italic;
+}
+.preview-stage .scene-source {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #7a6a5a;
+  text-align: left;
+}
+.preview-stage .block-divider {
+  border: none;
+  border-top: 1px solid #d8c8a8;
+  margin: 24px 0;
+}
+.preview-stage .inline-link {
+  color: #a0501a;
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+.preview-stage .inline-link:hover {
+  color: var(--accent);
+}
+.preview-stage .future-note {
+  text-align: center;
+  color: #7a6a5a;
+  font-size: 0.9rem;
+  margin-top: 24px;
+}
+/* ===== تب‌ها ===== */
+.studio-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.studio-tabs {
+  display: flex;
+  gap: 4px;
+}
+.studio-tab {
+  background: none;
+  border: 1px solid transparent;
+  color: #a89a78;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+.studio-tab:hover {
+  color: #f4d8a8;
+  background: #241c14;
+}
+.studio-tab.active {
+  background: #2e2418;
+  border-color: #c8732a;
+  color: #f4d8a8;
+}
+
+/* ===== شبیه‌ساز تایم‌لاین ===== */
+.timeline-sim {
+  color: #d8cdb8;
+}
+.sim-header h2 {
+  margin-top: 0;
+  color: #e8a85c;
+  font-size: 1.1rem;
+}
+.sim-timeline-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.sim-step-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 80px;
+  background: #14100c;
+  border: 1px solid #3a2e20;
+  color: #a89a78;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.sim-step-btn:hover {
+  border-color: #c8732a;
+}
+.sim-step-btn.active {
+  background: #2e2418;
+  border-color: #c8732a;
+  color: #f4d8a8;
+}
+.sim-step-btn.initial {
+  border-style: dashed;
+}
+.sim-step-time {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.sim-step-note {
+  font-size: 0.7rem;
+  color: #8a7a66;
+}
+.sim-step-btn.active .sim-step-note {
+  color: #c8a87a;
+}
+
+.sim-initial-note {
+  padding: 12px;
+  background: #1a1410;
+  border: 1px dashed #3a2e20;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #8a7a66;
+  margin-bottom: 16px;
+}
+
+.sim-step-info {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sim-time-badge,
+.sim-step-note-badge {
+  background: #2e2418;
+  color: #e8a85c;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+}
+.sim-step-note-badge {
+  color: #a89a78;
+  background: #1a1410;
+}
+
+.sim-section {
+  margin-bottom: 20px;
+}
+.sim-section h3 {
+  font-size: 0.9rem;
+  color: #e8a85c;
+  margin: 0 0 8px;
+  font-weight: normal;
+}
+
+.sim-poi-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sim-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+.sim-chip.poi {
+  background: rgba(200, 115, 42, 0.15);
+  color: #e8a85c;
+  border: 1px solid rgba(200, 115, 42, 0.3);
+}
+.sim-chip.narrative {
+  background: rgba(80, 160, 80, 0.15);
+  color: #8fd08f;
+  border: 1px solid rgba(80, 160, 80, 0.3);
+}
+.sim-chip small {
+  color: #8a7a66;
+  font-size: 0.7rem;
+}
+
+.sim-newly-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sim-newly-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sim-newly-meta {
+  font-size: 0.78rem;
+  color: #8a7a66;
+}
+
+.sim-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.sim-table th,
+.sim-table td {
+  padding: 6px 8px;
+  text-align: right;
+  border-bottom: 1px solid #2e2418;
+}
+.sim-table th {
+  color: #8a7a66;
+  font-weight: normal;
+  font-size: 0.75rem;
+}
+.sim-table tr.locked {
+  opacity: 0.5;
+}
+.sim-kind {
+  background: #1a1410;
+  color: #a89a78;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+}
+.sim-status {
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+.sim-status.unlocked {
+  background: rgba(80, 160, 80, 0.2);
+  color: #8fd08f;
+}
+.sim-status.locked {
+  background: rgba(140, 140, 140, 0.2);
+  color: #8a7a66;
+}
+
+.sim-summary {
+  display: flex;
+  gap: 12px;
+}
+.sim-stat {
+  flex: 1;
+  background: #14100c;
+  border: 1px solid #3a2e20;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+.sim-stat-value {
+  font-size: 1.5rem;
+  color: #e8a85c;
+  font-weight: bold;
+}
+.sim-stat-label {
+  font-size: 0.78rem;
+  color: #8a7a66;
+  margin-top: 4px;
+}
+/* ============================================
+   واکنش‌گرایی (اختیاری)
+   ============================================ */
+@media (max-width: 1200px) {
+  .studio-body {
+    grid-template-columns: 220px 1fr 320px;
+  }
+}
+@media (max-width: 900px) {
+  .studio-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    overflow-y: auto;
+  }
+  .studio-sidebar,
+  .studio-main,
+  .studio-preview {
+    border: none;
+    border-bottom: 1px solid #3a2e20;
+  }
+}

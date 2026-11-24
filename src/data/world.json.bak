@@ -1,0 +1,361 @@
+{
+  "world": {
+    "id": "world_arcadia",
+    "name": "آرکادیا",
+    "mapSvg": "world.svg",
+    "startTime": 0
+  },
+  "timeSteps": [
+    {
+      "advance": 30,
+      "note": "آرامش"
+    },
+    {
+      "advance": 170,
+      "note": "سال‌های گذرا"
+    },
+    {
+      "advance": 7,
+      "note": "هفته سرنوشت"
+    },
+    {
+      "advance": 143,
+      "note": "پس‌لرزه"
+    },
+    {
+      "advance": 180,
+      "note": "سال‌های ویرانی"
+    },
+    {
+      "advance": 50,
+      "note": "زمان حال"
+    }
+  ],
+  "continents": [
+    {
+      "id": "continent_north",
+      "name": "سرزمین شمالی",
+      "worldSvgId": "continent-north",
+      "unlocked": true,
+      "mapSvg": "north.svg",
+      "pois": [
+        {
+          "id": "poi_or",
+          "name": "شهر اور",
+          "type": "city",
+          "coords": {
+            "x": 320,
+            "y": 180
+          },
+          "icon": "city",
+          "revealTime": null,
+          "infoVersions": [
+            {
+              "from": 0,
+              "to": 350,
+              "type": "city",
+              "title": "شهر اور",
+              "description": "پایتخت سرزمین شمالی، شهری پررونق با بازارهای شلوغ.",
+              "tags": [
+                "پایتخت",
+                "بندری"
+              ]
+            },
+            {
+              "from": 350,
+              "to": null,
+              "type": "ruin",
+              "title": "خرابه‌های اور",
+              "description": "آنچه از پایتخت افسانه‌ای باقی مانده. تنها باد در کوچه‌ها می‌گردد.",
+              "tags": [
+                "ویرانه",
+                "تاریخی"
+              ]
+            }
+          ],
+          "narratives": [
+            {
+              "id": "nar_or_history",
+              "title": "تاریخ اور",
+              "kind": "lore",
+              "unlock": {
+                "type": "time",
+                "time": 0
+              },
+              "endTime": null,
+              "sections": [
+                {
+                  "id": "s1",
+                  "triggerTime": 0,
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "اور پایتخت سرزمین شمالی است، شهری که در سال ۲۰۰ توسط [[char:ملکه آریا]] بنیان گذاشته شد. و عاقا عالی"
+                    },
+                    {
+                      "type": "quote",
+                      "value": "اور سنگی است که شمال بر آن بنا شده.",
+                      "source": "کتاب تاریخ"
+                    },
+                    {
+                      "type": "text",
+                      "value": "بازارهای شهر هر روز پر از بازرگانان بود. اما در سال ۳۴۸، [[char:پادشاه]] در [[poi:تالار شورا]] تصمیمی گرفت که سرنوشت شهر را عوض کرد."
+                    }
+                  ]
+                },
+                {
+                  "id": "s2",
+                  "triggerTime": 350,
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "دیوارهای اور در سال ۳۵۰ فرو ریخت. این [[event:سقوط اور]] بود که همه‌چیز را عوض کرد. آنچه باقی ماند، تنها نامی بود."
+                    },
+                    {
+                      "type": "scene",
+                      "location": "خرابه‌ها",
+                      "time": "سال ۵۰۰",
+                      "value": "در میدانی که روزگاری بازرگانان فریاد می‌زدند، حالا فقط علف می‌روید.",
+                      "source": "مسافر ناشناس"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "story_guardian",
+              "title": "نگهبان دیوار",
+              "kind": "story",
+              "unlock": {
+                "type": "story_read",
+                "storyId": "nar_or_history"
+              },
+              "endTime": 350,
+              "sections": [
+                {
+                  "id": "s1",
+                  "triggerTime": 0,
+                  "title": "آغاز",
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "نگهبان روی دیوار ایستاده بود. شهر زیر پاش آرام بود."
+                    },
+                    {
+                      "type": "dialogue",
+                      "speaker": "نگهبان",
+                      "value": "امشب آرومه..."
+                    }
+                  ]
+                },
+                {
+                  "id": "s2",
+                  "triggerTime": 348,
+                  "title": "خبر",
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "خبری از [[poi:تالار شورا]] رسید. [[char:پادشاه]] تصمیم گرفته بود."
+                    },
+                    {
+                      "type": "callout",
+                      "variant": "note",
+                      "value": "هیچ‌کس نمی‌دانست فردا چه خواهد شد."
+                    }
+                  ]
+                },
+                {
+                  "id": "s3",
+                  "triggerTime": 350,
+                  "title": "پایان",
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "دیوار فرو ریخت. نگهبان دیگر نبود."
+                    },
+                    {
+                      "type": "quote",
+                      "value": "هیچ‌کس نامش را به یاد نیاورد."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "poi_war_room",
+          "name": "تالار شورا",
+          "type": "landmark",
+          "coords": {
+            "x": 380,
+            "y": 140
+          },
+          "icon": "landmark",
+          "revealTime": null,
+          "infoVersions": [
+            {
+              "from": 0,
+              "to": null,
+              "type": "landmark",
+              "title": "تالار شورا",
+              "description": "جایی که پادشاهان شمال تصمیم‌های بزرگ می‌گیرند.",
+              "tags": [
+                "سیاسی"
+              ]
+            }
+          ],
+          "narratives": [
+            {
+              "id": "scene_war_declaration",
+              "title": "اعلان جنگ",
+              "kind": "scene",
+              "unlock": {
+                "type": "time",
+                "time": 348
+              },
+              "endTime": null,
+              "sections": [
+                {
+                  "id": "s1",
+                  "triggerTime": 348,
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "بهار سال ۳۴۹، سپاه اور از رودخانه گذشت. روستاها سوختند. این جنگ، حاصل تصمیمی بود که یک سال قبل در این تالار گرفته شد."
+                    },
+                    {
+                      "type": "scene",
+                      "location": "تالار شورا",
+                      "time": "سال ۳۴۸",
+                      "value": "پادشاه رو به وزیرانش کرد و گفت: جنگ. کاتب بعدها نوشت که هیچ‌کس جرات اعتراض نداشت.",
+                      "source": "کاتب دربار"
+                    },
+                    {
+                      "type": "text",
+                      "value": "وزیر خزانه، شبانه، نامه‌ای به دربار همسایه فرستاد. نامه هرگز به دست [[char:پادشاه]] نیفتاد. این [[event:سقوط اور]] را رقم زد."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "poi_hidden_temple",
+          "name": "معبد گمشده",
+          "type": "temple",
+          "coords": {
+            "x": 150,
+            "y": 400
+          },
+          "icon": "temple",
+          "revealTime": 220,
+          "infoVersions": [
+            {
+              "from": 220,
+              "to": null,
+              "type": "temple",
+              "title": "معبد گمشده",
+              "description": "ویرانه‌های معبدی که زلزله سال ۲۰۰ آن را از زیر خاک بیرون آورد.",
+              "tags": [
+                "مذهبی",
+                "کشف‌شده"
+              ]
+            }
+          ],
+          "narratives": [
+            {
+              "id": "nar_temple",
+              "title": "کاهنان معبد",
+              "kind": "lore",
+              "unlock": {
+                "type": "time",
+                "time": 220
+              },
+              "endTime": null,
+              "sections": [
+                {
+                  "id": "s1",
+                  "triggerTime": 220,
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "کاهنان می‌گفتند دیوارهای اور به‌خاطر گناه مردم فرو می‌ریزند، نه خیانت. هیچ‌کس باور نمی‌کرد."
+                    },
+                    {
+                      "type": "quote",
+                      "value": "سنگ‌ها گناه را به یاد می‌آورند.",
+                      "source": "کتیبه معبد"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "continent_south",
+      "name": "سرزمین جنوبی",
+      "worldSvgId": "continent-south",
+      "unlocked": true,
+      "mapSvg": "south.svg",
+      "pois": [
+        {
+          "id": "poi_rival_court",
+          "name": "دربار همسایه",
+          "type": "city",
+          "coords": {
+            "x": 200,
+            "y": 200
+          },
+          "icon": "city",
+          "revealTime": null,
+          "infoVersions": [
+            {
+              "from": 0,
+              "to": null,
+              "type": "city",
+              "title": "دربار همسایه",
+              "description": "دربار سرزمین جنوبی، رقیب دیرینه اور.",
+              "tags": [
+                "سیاسی"
+              ]
+            }
+          ],
+          "narratives": [
+            {
+              "id": "nar_letter",
+              "title": "نامه‌ای از اور",
+              "kind": "lore",
+              "unlock": {
+                "type": "time",
+                "time": 350
+              },
+              "endTime": null,
+              "sections": [
+                {
+                  "id": "s1",
+                  "triggerTime": 350,
+                  "content": [
+                    {
+                      "type": "text",
+                      "value": "در سال ۳۴۸، نامه‌ای ناشناس به دربار رسید: «پادشاه اور قصد جنگ دارد. من مخالفم. اما نمی‌توانم جلوی او را بگیرم.»"
+                    },
+                    {
+                      "type": "quote",
+                      "value": "هیچ‌کس نامه را جدی نگرفت. تا بهار.",
+                      "source": "تاریخ‌نگار دربار همسایه"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
